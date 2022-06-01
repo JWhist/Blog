@@ -1,2 +1,4 @@
 export default (req, context) =>
-  context.log(req.headers.get('x-nf-client-connection-ip'));
+  context.log(
+    `Client IP header test: ${req.headers.get('x-nf-client-connection-ip')}`
+  );
