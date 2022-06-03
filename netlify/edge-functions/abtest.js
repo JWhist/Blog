@@ -63,8 +63,7 @@ export default async (request) => {
   }
 
   if (!matchCriteria(request, filter)) {
-    console.log(request.url);
-    return await fetch(request.url, request);
+    return;
   }
 
   const destination = randomDestination(destinations);
@@ -138,7 +137,6 @@ function matchBrowserCriteria(request, values) {
 
   const regex = /(edg|opera|chrome|safari|firefox|msie|trident)/i;
   const userBrowser = request.headers.get('User-Agent').match(regex)[0];
-  console.log(userBrowser);
   return values.some(
     (browser) => browser.toLowerCase() === userBrowser.toLowerCase()
   );
