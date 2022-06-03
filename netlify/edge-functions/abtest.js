@@ -13,7 +13,7 @@ const VARIANTS = [
 const RULE = {
   filter: {
     device: '',
-    browser: [],
+    browser: ['chrome'],
     header: {},
     cookie: '',
   },
