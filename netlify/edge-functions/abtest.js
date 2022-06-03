@@ -58,7 +58,6 @@ export default async (request) => {
       );
       const newUrl = request.url.replace(host, variant.url);
       let response = await fetch(newUrl, request);
-      response = injectScriptInHTML(variant.script, response);
       return response;
     }
   }
@@ -74,7 +73,6 @@ export default async (request) => {
   const newUrl = request.url.replace(host, variant.url);
   let response = await fetch(newUrl, request);
   response = addCookie(response, cookieName, variant.name);
-  // response = injectScriptInHTML(variant.script, response);
   return response;
 };
 
