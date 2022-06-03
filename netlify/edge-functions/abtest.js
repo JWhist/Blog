@@ -30,19 +30,19 @@ const RULE = {
   note: '',
 };
 
-export default (request) => {
-  const cookieName = "splitLIFY";
-  const host = request.headers.get("host");
-  const cookie = request.headers.get("cookie");
+export default async (request) => {
+  const cookieName = 'splitLIFY';
+  const host = request.headers.get('host');
+  const cookie = request.headers.get('cookie');
   const filter = RULE.filter;
   const destinations = RULE.destinations;
-  let vars = VARIANTS
+  let vars = VARIANTS;
   // strip leading http:// or https:// from urls if present
   vars = vars.map((variant) => {
-    if (variant.url.startsWith("http://")) {
+    if (variant.url.startsWith('http://')) {
       variant.url = variant.url.slice(7);
       return variant;
-    } else if (variant.url.startsWith("https://")) {
+    } else if (variant.url.startsWith('https://')) {
       variant.url = variant.url.slice(8);
       return variant;
     } else return variant;
@@ -76,12 +76,12 @@ export default (request) => {
   response = addCookie(response, cookieName, variant.name);
   // response = injectScriptInHTML(variant.script, response);
   return response;
-}
+};
 
 function addCookie(response, cookieName, variantName) {
   const newResponse = new Response(response.body, response);
   newResponse.headers.append(
-    "Set-Cookie",
+    'Set-Cookie',
     `${cookieName}=${variantName}; path=/`
   );
   return newResponse;
@@ -122,23 +122,23 @@ function matchCriteria(request, filter) {
 }
 
 function matchDeviceCriteria(request, value) {
-  if (value === "") return true;
+  if (value === '') return true;
 
   const regex =
     /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune/i;
 
-  const device = request.headers.get("User-Agent").match(regex)
-    ? "mobile"
-    : "desktop";
+  const device = request.headers.get('User-Agent').match(regex)
+    ? 'mobile'
+    : 'desktop';
 
-    return value === device;
+  return value === device;
 }
 
 function matchBrowserCriteria(request, values) {
   if (values.length === 0) return true;
 
   const regex = /(edg|opera|chrome|safari|firefox|msie|trident)/i;
-  const userBrowser = request.headers.get("User-Agent").match(regex)[0];
+  const userBrowser = request.headers.get('User-Agent').match(regex)[0];
 
   return values.some(
     (browser) => browser.toLowerCase() === userBrowser.toLowerCase()
@@ -146,12 +146,15 @@ function matchBrowserCriteria(request, values) {
 }
 
 function matchHeaderCriteria(request, header) {
-  return Object.keys(header).length === 0 || request.headers.get(header.name) === header.value;
+  return (
+    Object.keys(header).length === 0 ||
+    request.headers.get(header.name) === header.value
+  );
 }
 
 function matchCookieCriteria(request, value) {
-  if (!value) return true
-  const cookie = request.headers.get("cookie");
+  if (!value) return true;
+  const cookie = request.headers.get('cookie');
   if (!cookie) return false;
   return cookie.includes(value);
 }
