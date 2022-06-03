@@ -30,18 +30,15 @@ const RULE = {
   note: '',
 };
 
-const abConfig = { VARIANTS, RULE };
-
 export default (request) => {
-  const cookieName = "netlify-split";
+  const cookieName = "splitLIFY";
   const host = request.headers.get("host");
   const cookie = request.headers.get("cookie");
-  const filter = abConfig.rule.filter;
-  const destinations = abConfig.rule.destinations;
-  let variants = abConfig.variants;
-
+  const filter = RULE.filter;
+  const destinations = RULE.destinations;
+  let vars = VARIANTS
   // strip leading http:// or https:// from urls if present
-  variants = variants.map((variant) => {
+  vars = vars.map((variant) => {
     if (variant.url.startsWith("http://")) {
       variant.url = variant.url.slice(7);
       return variant;
@@ -56,7 +53,7 @@ export default (request) => {
       cookie.includes(`${cookieName}=${variantName}`)
     );
     if (destination) {
-      const variant = variants.find(
+      const variant = vars.find(
         (variant) => variant.name === destination.variantName
       );
       const newUrl = request.url.replace(host, variant.url);
@@ -71,7 +68,7 @@ export default (request) => {
   }
 
   const destination = randomDestination(destinations);
-  const variant = variants.find(
+  const variant = vars.find(
     (variant) => variant.name === destination.variantName
   );
   const newUrl = request.url.replace(host, variant.url);
@@ -103,12 +100,6 @@ function randomDestination(destinations) {
   }
   return destination;
 }
-
-// function injectScriptInHTML(script, response) {
-//   return new HTMLRewriter()
-//     .on("head", new ElementHandler(script))
-//     .transform(response);
-// }
 
 function matchCriteria(request, filter) {
   const criteriaTypes = {
@@ -164,12 +155,3 @@ function matchCookieCriteria(request, value) {
   if (!cookie) return false;
   return cookie.includes(value);
 }
-
-// class ElementHandler {
-//   constructor(scriptTag) {
-//     this.scriptTag = scriptTag;
-//   }
-//   element(element) {
-//     element.append(this.scriptTag, { html: true });
-//   }
-// }
