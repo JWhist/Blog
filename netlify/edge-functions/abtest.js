@@ -48,6 +48,7 @@ export default async (request) => {
     } else return variant;
   });
 
+  // If they've been there before get the appropriate content
   if (cookie) {
     const destination = destinations.find(({ variantName }) =>
       cookie.includes(`${cookieName}=${variantName}`)
@@ -62,10 +63,12 @@ export default async (request) => {
     }
   }
 
+  // Otherwise, if they don't match the criteria, just return
   if (!matchCriteria(request, filter)) {
     return;
   }
 
+  // Otherwise, pick a variant and set the cookie, and send that content
   const destination = randomDestination(destinations);
   const variant = vars.find(
     (variant) => variant.name === destination.variantName
