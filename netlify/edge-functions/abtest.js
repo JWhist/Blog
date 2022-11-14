@@ -58,8 +58,8 @@ export default async (request) => {
       const variant = vars.find(
         (variant) => variant.name === destination.variantName
       );
-      const newUrl = request.url.replace(host, variant.url);
-      response = await fetch(newUrl, request);
+      request.url = variant.url;
+      response = await fetch(request);
       return response;
     }
   }
@@ -74,8 +74,8 @@ export default async (request) => {
   const variant = vars.find(
     (variant) => variant.name === destination.variantName
   );
-  const newUrl = request.url.replace(host, variant.url);
-  response = await fetch(newUrl, request);
+  const newUrl = variant.url;
+  response = await fetch(newUrl);
   response = addCookie(response, cookieName, variant.name);
   return response;
 };
