@@ -73,11 +73,14 @@ export default async (request, context) => {
     (variant) => variant.name === destination.variantName
   );
   console.log(variant.url);
-  addCookie(response, cookieName, variant.name);
   if (variant.url === request.url) {
-    return context.next();
+    response = context.next();
+    addCookie(response, cookieName, variant.name);
+    return response;
   }
-  return await fetch('https://' + variant.url);
+  response = await fetch('https://' + variant.url);
+  addCookie(response, cookieName, variant.name);
+  return response;
 };
 
 function addCookie(response, cookieName, variantName) {
