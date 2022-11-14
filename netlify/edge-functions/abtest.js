@@ -58,7 +58,7 @@ export default async (request, context) => {
         (variant) => variant.name === destination.variantName
       );
       const newUrl = request.url.replace(host, variant.url);
-      const newResponse = await fetch(newUrl);
+      const newResponse = await fetch(variant.url);
       const originalresponse = context.next();
       return request.url === newUrl ? originalresponse : newResponse;
     }
@@ -74,10 +74,9 @@ export default async (request, context) => {
   const variant = vars.find(
     (variant) => variant.name === destination.variantName
   );
+  const newResponse = await fetch(variant.url);
   const newUrl = request.url.replace(host, variant.url);
-  const newResponse = await fetch(newUrl);
   const originalResponse = context.next();
-  let response;
   if (request.url === newUrl) {
     response = addCookie(originalResponse, cookieName, variant.name);
     return response;
