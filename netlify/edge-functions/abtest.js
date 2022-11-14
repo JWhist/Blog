@@ -58,7 +58,7 @@ export default async (request) => {
         (variant) => variant.name === destination.variantName
       );
       request.url = variant.url;
-      response = await fetch(request.url);
+      response = await fetch('https://' + request.url);
       return response;
     }
   }
@@ -74,7 +74,7 @@ export default async (request) => {
     (variant) => variant.name === destination.variantName
   );
   console.log(variant.url);
-  response = await fetch(variant.url);
+  response = await fetch('https://' + variant.url);
   response = addCookie(response, cookieName, variant.name);
   return response;
 };
