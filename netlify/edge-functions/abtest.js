@@ -73,7 +73,7 @@ export default async (request) => {
   const variant = vars.find(
     (variant) => variant.name === destination.variantName
   );
-  console.log(newURL);
+  console.log(variant.url);
   response = await fetch(variant.url);
   response = addCookie(response, cookieName, variant.name);
   return response;
