@@ -32,7 +32,6 @@ const RULE = {
 
 export default async (request, context) => {
   const cookieName = 'splitLIFY';
-  const host = request.headers.get('host');
   const cookie = request.headers.get('cookie');
   const filter = RULE.filter;
   const destinations = RULE.destinations;
