@@ -57,8 +57,7 @@ export default async (request) => {
       const variant = vars.find(
         (variant) => variant.name === destination.variantName
       );
-      request.url = variant.url;
-      response = await fetch('https://' + request.url);
+      response = await fetch('https://' + variant.url);
       return response;
     }
   }
