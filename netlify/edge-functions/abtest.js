@@ -1,14 +1,12 @@
-import type { Context } from 'https://edge.netlify.com';
-
 const VARIANTS = [
   {
     name: 'main',
-    url: 'https://bucolic-sopapillas-216ed0.netlify.app/',
+    url: 'https://main--jocular-pavlova-6e97f0.netlify.app/',
     script: '',
   },
   {
     name: 'alt',
-    url: 'https://deploy-preview-1--bucolic-sopapillas-216ed0.netlify.app/',
+    url: 'https://deploy-preview-1--jocular-pavlova-6e97f0.netlify.app/',
     script: '',
   },
 ];
@@ -32,11 +30,13 @@ const RULE = {
   note: '',
 };
 
-export default async (request: Request, context: Context) => {
+export default async (request) => {
   const cookieName = 'splitLIFY';
+  const host = request.headers.get('host');
   const cookie = request.headers.get('cookie');
   const filter = RULE.filter;
   const destinations = RULE.destinations;
+  let response;
   let vars = VARIANTS;
   // strip leading http:// or https:// from urls if present
   vars = vars.map((variant) => {
@@ -58,10 +58,9 @@ export default async (request: Request, context: Context) => {
       const variant = vars.find(
         (variant) => variant.name === destination.variantName
       );
-      const newResponse = await fetch(variant.url);
-      const originalresponse = context.next();
-      console.log(newResponse.status);
-      return request.url === variant.url ? originalresponse : newResponse;
+      const newUrl = request.url.replace(host, variant.url);
+      response = await fetch(newUrl, request);
+      return response;
     }
   }
 
@@ -75,14 +74,9 @@ export default async (request: Request, context: Context) => {
   const variant = vars.find(
     (variant) => variant.name === destination.variantName
   );
-  const newResponse = await fetch(variant.url);
-  const originalResponse = context.next();
-  let response;
-  if (request.url === variant.url) {
-    response = addCookie(originalResponse, cookieName, variant.name);
-    return response;
-  }
-  response = addCookie(newResponse, cookieName, variant.name);
+  const newUrl = request.url.replace(host, variant.url);
+  response = await fetch(newUrl, request);
+  response = addCookie(response, cookieName, variant.name);
   return response;
 };
 
