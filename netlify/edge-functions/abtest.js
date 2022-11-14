@@ -32,7 +32,6 @@ const RULE = {
 
 export default async (request) => {
   const cookieName = 'splitLIFY';
-  const host = request.headers.get('host');
   const cookie = request.headers.get('cookie');
   const filter = RULE.filter;
   const destinations = RULE.destinations;
@@ -59,7 +58,7 @@ export default async (request) => {
         (variant) => variant.name === destination.variantName
       );
       request.url = variant.url;
-      response = await fetch(request);
+      response = await fetch(request.url);
       return response;
     }
   }
@@ -74,8 +73,8 @@ export default async (request) => {
   const variant = vars.find(
     (variant) => variant.name === destination.variantName
   );
-  const newUrl = variant.url;
-  response = await fetch(newUrl);
+  console.log(newURL);
+  response = await fetch(variant.url);
   response = addCookie(response, cookieName, variant.name);
   return response;
 };
