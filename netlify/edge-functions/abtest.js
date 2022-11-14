@@ -1,12 +1,12 @@
 const VARIANTS = [
   {
     name: 'main',
-    url: 'https://main--jocular-pavlova-6e97f0.netlify.app/',
+    url: 'https://bucolic-sopapillas-216ed0.netlify.app/',
     script: '',
   },
   {
     name: 'alt',
-    url: 'https://deploy-preview-1--jocular-pavlova-6e97f0.netlify.app/',
+    url: 'https://deploy-preview-1--bucolic-sopapillas-216ed0.netlify.app/',
     script: '',
   },
 ];
