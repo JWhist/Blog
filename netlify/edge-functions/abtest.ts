@@ -1,3 +1,5 @@
+import type { Context } from 'https://edge.netlify.com';
+
 const VARIANTS = [
   {
     name: 'main',
@@ -30,7 +32,7 @@ const RULE = {
   note: '',
 };
 
-export default async (request, context) => {
+export default async (request: Request, context: Context) => {
   const cookieName = 'splitLIFY';
   const cookie = request.headers.get('cookie');
   const filter = RULE.filter;
@@ -58,6 +60,7 @@ export default async (request, context) => {
       );
       const newResponse = await fetch(variant.url);
       const originalresponse = context.next();
+      console.log(newResponse.status);
       return request.url === variant.url ? originalresponse : newResponse;
     }
   }
@@ -74,6 +77,7 @@ export default async (request, context) => {
   );
   const newResponse = await fetch(variant.url);
   const originalResponse = context.next();
+  let response;
   if (request.url === variant.url) {
     response = addCookie(originalResponse, cookieName, variant.name);
     return response;
