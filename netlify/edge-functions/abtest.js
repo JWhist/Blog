@@ -30,7 +30,7 @@ const RULE = {
   note: '',
 };
 
-export default async (request) => {
+export default async (request, context) => {
   const cookieName = 'splitLIFY';
   const host = request.headers.get('host');
   const cookie = request.headers.get('cookie');
@@ -58,8 +58,9 @@ export default async (request) => {
         (variant) => variant.name === destination.variantName
       );
       const newUrl = request.url.replace(host, variant.url);
-      let response = await fetch(newUrl, request);
-      return response;
+      const newResponse = await fetch(newUrl);
+      const originalresponse = context.next();
+      return request.url === newUrl ? originalresponse : newResponse;
     }
   }
 
